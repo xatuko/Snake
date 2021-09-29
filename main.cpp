@@ -1,10 +1,12 @@
-#include "snake.hpp"
+#include "csnake.hpp"
 #include "cbox.hpp"
 
 #include <memory>
+#include <chrono>
 
-std::atomic<uint8_t> dir;
-std::atomic<bool> status;
+int dir = 1;
+std::atomic_int ex {0};
+std::atomic<bool> status {true};
 
 
 void reader()
@@ -16,17 +18,19 @@ void reader()
 		switch(c)
 		{
 			case 66:
-				dir = {1};
+				dir = 1;
 				break;
 			case 65:
-				dir = {0};
+				dir = 0;
 				break;
 			case 67:
-				dir = {3};
+				dir = 3;
 				break;
 			case 68:
-				dir = {2};
+				dir = 2;
 				break;
+			case 113:
+				status = false;
 			default:
 				break;
 		}
@@ -35,38 +39,53 @@ void reader()
 
 int main(int, char**)
 {
+	std::shared_ptr<ISnake> snake = std::make_shared<CSnake>();
 	std::unique_ptr<IBox> box = std::make_unique<CBox>();
-	box->setSideSize(20);
-	if (box->init())
-		box->draw();
-	return 0;
-}
-
-int mai2n(int, char**) {
-	dir = {1};
-	status = {true};
-	Snake kobra;
 	std::thread thr(reader);
-	
-	
-	system("clear");
-	std::vector<std::string> buf;
-	
-	kobra.draw(10,10, buf);
-	printBuf(buf);
-	sleep(1);
 
-	for(int i = 0; i < 20; i++)
+	snake->setDir(1);
+	box->addSnake(snake);
+	box->setSideSize(20);
+	if (!box->init())
+		return -1;
+
+	while (status)
 	{
-		
-		system("clear");
-		kobra.setDir(dir);
-		kobra.step();
-		kobra.draw(10,10, buf);
-		printBuf(buf);
+		box->draw();
+		snake->setDir(dir);
+		snake->step();
 		sleep(1);
 	}
-	status = {false};
+
 	thr.join();
 	return 0;
 }
+
+// int mai2n(int, char**) {
+// 	dir = {1};
+// 	status = {true};
+// 	Snake kobra;
+// 	std::thread thr(reader);
+	
+	
+// 	system("clear");
+// 	std::vector<std::string> buf;
+	
+// 	kobra.draw(10,10, buf);
+// 	printBuf(buf);
+// 	sleep(1);
+
+// 	for(int i = 0; i < 20; i++)
+// 	{
+		
+// 		system("clear");
+// 		kobra.setDir(dir);
+// 		kobra.step();
+// 		kobra.draw(10,10, buf);
+// 		printBuf(buf);
+// 		sleep(1);
+// 	}
+// 	status = {false};
+// 	thr.join();
+// 	return 0;
+// }
