@@ -19,7 +19,7 @@ std::pair<int,int> CFood::getNewFood(const std::vector<std::string> & buf)
 
     std::random_device rd;
     std::default_random_engine dre(rd());
-    std::uniform_int_distribution<> uni_dist(0, 5);
+    std::uniform_int_distribution<> uni_dist(0, m_free_x.size());
 
     int idx = uni_dist(dre);
     m_x = m_free_x[idx];
