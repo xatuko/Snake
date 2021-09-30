@@ -51,9 +51,10 @@ int main(int, char**)
 
 	while (status)
 	{
-		box->draw();
 		snake->setDir(dir);
 		snake->step();
+
+		box->draw();
 		sleep(1);
 	}
 

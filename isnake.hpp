@@ -15,6 +15,8 @@ public:
     virtual void setDir(int) = 0;
     virtual bool getStatus() = 0;
     virtual std::vector<Elem> getSnake() = 0;
+    virtual std::pair<int,int> getHead() = 0;
+    virtual void setNewHead(int x, int y) = 0;
 
 };
 

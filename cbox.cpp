@@ -71,6 +71,11 @@ bool CBox::draw()
 	{
 		auto p = m_food->getFood();
 		m_box[p.second][p.first] = 'O';
+		if (p == m_snake->getHead())
+		{
+			m_food->eatFood();
+			m_snake->setNewHead(p.first, p.second);
+		}
 	}
 
 	std::string border(m_side_size + 2, '-');

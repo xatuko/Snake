@@ -33,6 +33,8 @@ private:
 	std::vector<Elem> m_snake;
 	int m_length;
 	struct std::atomic<bool> m_status;
+	std::pair<int,int> getHead() override;
+	void setNewHead(int x, int y) override;
 };
 
 #endif // CSNAKE_HPP

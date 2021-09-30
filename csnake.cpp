@@ -88,6 +88,19 @@ void CSnake::draw(int x_size, int y_size, std::vector<std::string>& buf)
 		buf[m_snake[i].y][m_snake[i].x] = 'O';
 }
 
+std::pair<int,int> CSnake::getHead()
+{
+	return std::make_pair(m_snake[0].x, m_snake[0].y);
+}
+
+void CSnake::setNewHead(int x, int y)
+{
+	Elem head = {.x = x, .y = y, .next = nullptr};
+	m_snake.insert(m_snake.begin(), head);
+	for (int i = m_snake.size()-1; i > 0; i--)
+		m_snake[i].next = &m_snake[i-1];
+}
+
 CSnake::~CSnake()
 {
 	
