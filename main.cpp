@@ -7,9 +7,9 @@
 int dir = 1;
 std::atomic_int ex {0};
 std::atomic<bool> status {true};
+std::atomic_bool is_pause {false};
 
-
-void reader()
+void reader(std::shared_ptr<ISnake> snake)
 {
 	int c;
 	while(status)
@@ -31,9 +31,12 @@ void reader()
 				break;
 			case 113:
 				status = false;
+			case 112:
+				is_pause = !is_pause;
 			default:
 				break;
 		}
+		snake->setDir(dir);
 	}
 }
 
@@ -41,7 +44,7 @@ int main(int, char**)
 {
 	std::shared_ptr<ISnake> snake = std::make_shared<CSnake>();
 	std::unique_ptr<IBox> box = std::make_unique<CBox>();
-	std::thread thr(reader);
+	std::thread thr(reader, std::ref(snake));
 
 	snake->setDir(1);
 	box->addSnake(snake);
@@ -51,11 +54,18 @@ int main(int, char**)
 
 	while (status)
 	{
-		snake->setDir(dir);
-		snake->step();
+		if (!is_pause)
+		{
+			//snake->setDir(dir);
+			snake->step();
 
-		box->draw();
-		sleep(1);
+			if (!box->draw())
+			{
+				status = false;
+			}
+			std::cout << "Длина змея: " << snake->getSnake().size();
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(250));
 	}
 
 	thr.join();

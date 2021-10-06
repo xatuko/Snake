@@ -12,16 +12,20 @@ void CSnake::setDir(int dir)
 	switch(dir)
 	{
 		case 0:
-			m_direction = DIRECTION::UP;
+			if (m_direction != DIRECTION::DOWN)
+				m_direction = DIRECTION::UP;
 			break;
 		case 1:
-			m_direction = DIRECTION::DOWN;
+			if (m_direction != DIRECTION::UP)
+				m_direction = DIRECTION::DOWN;
 			break;
 		case 2:
-			m_direction = DIRECTION::LEFT;
+			if (m_direction != DIRECTION::RIGHT)
+				m_direction = DIRECTION::LEFT;
 			break;
 		case 3:
-			m_direction = DIRECTION::RIGHT;
+			if (m_direction != DIRECTION::LEFT)
+				m_direction = DIRECTION::RIGHT;
 			break;
 	}
 }

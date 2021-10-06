@@ -48,8 +48,18 @@ bool CBox::init()
 
 bool CBox::draw()
 {
-	system("clear");
 	clearBuf();
+	if (m_food->hasFood())
+	{
+		auto p = m_food->getFood();
+		m_box[p.second][p.first] = 'O';
+		if (p == m_snake->getHead())
+		{
+			m_food->eatFood();
+			m_snake->setNewHead(p.first, p.second);
+		}
+	}
+
 	for (auto & el : m_snake->getSnake())
 	{
 		if (el.x >= m_side_size || el.x < 0 || 
@@ -67,17 +77,18 @@ bool CBox::draw()
 		auto p = m_food->getNewFood(m_box);
 		m_box[p.second][p.first] = 'O';
 	}
-	else
-	{
-		auto p = m_food->getFood();
-		m_box[p.second][p.first] = 'O';
-		if (p == m_snake->getHead())
-		{
-			m_food->eatFood();
-			m_snake->setNewHead(p.first, p.second);
-		}
-	}
 
+	for (size_t i = 2; i < m_snake->getSnake().size(); i++)
+		if (m_snake->getHead().first == m_snake->getSnake()[i].x &&
+			m_snake->getHead().second == m_snake->getSnake()[i].y)
+		{
+			print("Змей съел сам себя.");
+			print("Игра окончена.");
+			return false;
+		}
+
+	
+	system("clear");
 	std::string border(m_side_size + 2, '-');
 	border[0] = '+';
 	border[border.size() - 1] = '+';
