@@ -24,17 +24,20 @@ public:
 	~CSnake() override;
 	void step() override;
 	void draw(int x_size, int y_size, std::vector<std::string>&);
-	void setDir(int) override;
+	void setDir(DIRECTION dir) override;
 	bool getStatus() override;
 	std::vector<Elem> getSnake() override { return m_snake; }
+	bool init(const int & beg_size, const int & side_size) override;
 	
 private:
 	DIRECTION m_direction;
 	std::vector<Elem> m_snake;
 	int m_length;
-	struct std::atomic<bool> m_status;
+	std::atomic_bool m_status;
 	std::pair<int,int> getHead() override;
 	void setNewHead(int x, int y) override;
+	void print(const std::string & text);
+	bool error(const std::string & text);
 };
 
 #endif // CSNAKE_HPP

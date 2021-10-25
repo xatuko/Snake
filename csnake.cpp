@@ -7,23 +7,23 @@ bool CSnake::getStatus()
 	return false;
 }
 
-void CSnake::setDir(int dir)
-{
+void CSnake::setDir(DIRECTION dir)
+{	
 	switch(dir)
 	{
-		case 0:
+		case DIRECTION::UP:
 			if (m_direction != DIRECTION::DOWN)
 				m_direction = DIRECTION::UP;
 			break;
-		case 1:
+		case DIRECTION::DOWN:
 			if (m_direction != DIRECTION::UP)
 				m_direction = DIRECTION::DOWN;
 			break;
-		case 2:
+		case DIRECTION::LEFT:
 			if (m_direction != DIRECTION::RIGHT)
 				m_direction = DIRECTION::LEFT;
 			break;
-		case 3:
+		case DIRECTION::RIGHT:
 			if (m_direction != DIRECTION::LEFT)
 				m_direction = DIRECTION::RIGHT;
 			break;
@@ -53,6 +53,29 @@ CSnake::CSnake() : ISnake()
 	m_snake[2].x = 5;
 	m_snake[2].y = 0;
 	m_status = false;
+}
+
+bool CSnake::init(const int & beg_size, const int & side_size)
+{
+	if (beg_size > side_size / 2 || beg_size < 1 || side_size < 1)
+		return error("Ошибка инициализации змея.");
+
+	m_direction = DIRECTION::DOWN;
+
+	m_snake.resize(beg_size);
+
+	for (size_t i = m_snake.size() - 1; i > 0; i--)
+	{
+		m_snake[i].next = &m_snake[i-1];
+		m_snake[i].x = side_size / 2;
+		m_snake[i].y = side_size / 2 - i;
+	}
+
+	m_snake[0].next = nullptr;
+	m_snake[0].x = side_size / 2;
+	m_snake[0].y = side_size / 2;
+
+	return true;
 }
 
 void CSnake::step()
@@ -108,4 +131,16 @@ void CSnake::setNewHead(int x, int y)
 CSnake::~CSnake()
 {
 	
+}
+
+void CSnake::print(const std::string & text)
+{
+
+}
+
+bool CSnake::error(const std::string & text)
+{
+	print(text);
+	print("Error № " + std::to_string(errno));
+	return false;
 }
