@@ -29,9 +29,9 @@ void CBox::resetTermios()
 
 bool CBox::init()
 {
-	if (m_side_size == 0)
+	if (m_side_size < 1)
 	{
-		print("Указан нулевой размер поля.");
+		print("Указан неверный размер поля.");
 		return false;
 	}
 
@@ -42,6 +42,9 @@ bool CBox::init()
 	initTermios();
 
 	m_is_init = true;
+
+	m_dir_thread_run = true;
+	m_dir_thead = std::make_unique<std::thread>(&CBox::directionThread, this);
 
 	return true;
 }
@@ -96,6 +99,7 @@ bool CBox::draw()
 	for (auto & s : m_box)
 		std::cout << '|' << s << '|' << std::endl;
 	std::cout << border << std::endl;
+	std::cout << "Длина змея: " << m_snake->getSnake().size() << std::endl;
 	return true;
 }
 
@@ -115,4 +119,31 @@ void CBox::clearBuf()
 {
 	for (auto & str : m_box)
 		str = std::string(m_side_size, ' ');
+}
+
+void CBox::directionThread()
+{
+	int c;
+	while (m_dir_thread_run)
+	{
+		c = getc(stdin);
+		switch (c)
+		{
+			case 66: m_snake->setDir(DIRECTION::DOWN); break;
+			case 65: m_snake->setDir(DIRECTION::UP); break;
+			case 67: m_snake->setDir(DIRECTION::RIGHT); break;
+			case 68: m_snake->setDir(DIRECTION::LEFT); break;
+			case 113: m_dir_thread_run = false; break;
+			case 112: m_pause = !m_pause; break;
+		}
+	}
+}
+
+CBox::~CBox()
+{
+	resetTermios();
+	
+	m_dir_thread_run = false;
+	if (m_dir_thead->joinable())
+		m_dir_thead->join();
 }

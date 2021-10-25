@@ -23,17 +23,21 @@ private:
 	termios m_old_termios, m_current_termios;
 	std::shared_ptr<ISnake> m_snake;
 	std::unique_ptr<IFood> m_food;
+	std::atomic_bool m_dir_thread_run { false };
+	bool m_pause;
+	std::unique_ptr<std::thread> m_dir_thead;
 
 	// methods
 	void initTermios();
 	void resetTermios();
+	void directionThread();
 
 	void print(const std::string & text);
 	int  error(const std::string & text);
 
 public:
 	CBox();
-	~CBox() override { resetTermios(); }
+	~CBox() override;
 
 	// methods
 	void setSideSize(const int & size) override { m_side_size = size; }
@@ -42,7 +46,9 @@ public:
 	bool isInit() override { return m_is_init; }
 	void addSnake(std::shared_ptr<ISnake> snake) override { m_snake = snake; }
 	void clearBuf() override;
-
+	bool isPause() override { return m_pause; }
+	bool isRunning() override { return m_dir_thread_run; }
+	void finish() override { m_dir_thread_run = false;}
 };
 
 #endif // CBOX_HPP

@@ -15,6 +15,9 @@ public:
 	virtual bool isInit() = 0;
 	virtual void addSnake(std::shared_ptr<ISnake> snake) = 0;
 	virtual void clearBuf() = 0;
+	virtual bool isPause() = 0;
+	virtual bool isRunning() = 0;
+	virtual void finish() = 0;
 };
 
 #endif // IBOX_HPP
