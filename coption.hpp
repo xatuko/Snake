@@ -48,24 +48,24 @@ private:
 	 * @param opt Строковое значение аргумента.
 	 * @return std::pair<bool, option>: first == true, если является флагом.
 	 */
-	std::pair<bool, option> isOption(const std::string & opt);
+	std::pair<bool, option> isOption (const std::string & opt);
 
 	/**
 	 * @brief Печать сообщения от класса.
 	 * @param text Сообщение.
 	 */
-	void print(const std::string & text);
+	void print (const std::string & text);
 
 	/**
 	 * @brief Печать ошибки от класса.
 	 * @param text Сообщение.
 	 */
-	void error(const std::string & text);
+	void error (const std::string & text);
 
 public:
 // Methods	
-	COption();
-	~COption() override;
+	COption ();
+	~COption () override;
 
 	/**
 	 * @brief Инициализировать объект.
@@ -75,21 +75,21 @@ public:
 	 * @returns true - в случае успешной инициализации,
 	 * 			false - в случае ошибки.
 	 */
-	bool init(const int & argc, const char ** argv) override;
+	bool init (const int & argc, const char ** argv) override;
 
 	/**
 	 * @brief Получить целочисленное значение параметра.
 	 * @param name Имя параметра.
 	 * @param def_val Значение по умолчанию.
 	 */
-	int getInt(const std::string & name, const int & def_val) override;
+	int getInt (const std::string & name, const int & def_val) override;
 
 	/**
 	 * @brief Получить строковое значение параметра.
 	 * @param name Имя параметра.
 	 * @param def_val Значение по умолчанию.
 	 */
-	std::string getString(const std::string & name, 
+	std::string getString (const std::string & name, 
 								  const std::string & def_val) override;
 
 	/**
@@ -98,14 +98,14 @@ public:
 	 * @param def_val Значение по умолчанию.
 	 * @return double 
 	 */
-	double getDouble(const std::string & name,
+	double getDouble (const std::string & name,
 							 const double & def_val) override;
 	
 	/**
 	 * @brief Узнать, установлен ли флаг '--help'.
 	 * @returns true - если установлен, false - если не установлен.
 	 */
-	bool needHelp() override;
+	bool needHelp () override;
 };
 
 #endif // COPTION_HPP

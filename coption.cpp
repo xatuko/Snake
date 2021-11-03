@@ -1,13 +1,13 @@
 #include "coption.hpp"
 
-COption::COption() : IOption()
+COption::COption () : IOption ()
 {
 	m_arg_list.clear();
 }
 
-COption::~COption() { }
+COption::~COption () { }
 
-bool COption::init(const int & argc, const char ** argv)
+bool COption::init (const int & argc, const char ** argv)
 {
 	if (argc == 1)
 		return true;
@@ -54,7 +54,7 @@ bool COption::init(const int & argc, const char ** argv)
 	return true;
 }
 
-std::pair<bool, option> COption::isOption(const std::string & opt)
+std::pair<bool, option> COption::isOption (const std::string & opt)
 {
 	auto & args = def::arg_list;
 
@@ -65,7 +65,7 @@ std::pair<bool, option> COption::isOption(const std::string & opt)
 	return std::make_pair(false, option());
 }
 
-int COption::getInt(const std::string & name, const int & def_val)
+int COption::getInt (const std::string & name, const int & def_val)
 {
 	std::string buf;
 	for (auto & arg : m_arg_list)
@@ -78,7 +78,7 @@ int COption::getInt(const std::string & name, const int & def_val)
 	return atoi(buf.data());
 }
 
-double COption::getDouble(const std::string & name, const double & def_val)
+double COption::getDouble (const std::string & name, const double & def_val)
 {
 	std::string buf;
 	for (auto & arg : m_arg_list)
@@ -91,7 +91,7 @@ double COption::getDouble(const std::string & name, const double & def_val)
 	return atof(buf.data());
 }
 
-std::string COption::getString(const std::string & name,
+std::string COption::getString (const std::string & name,
 							   const std::string & def_val)
 {
 	std::string buf;
@@ -105,7 +105,7 @@ std::string COption::getString(const std::string & name,
 	return buf;
 }
 
-bool COption::needHelp()
+bool COption::needHelp ()
 {
 	for (auto & arg : m_arg_list)
 		if (arg.name == "--help")
@@ -116,12 +116,12 @@ bool COption::needHelp()
 	return false;
 }
 
-void COption::print(const std::string & text)
+void COption::print (const std::string & text)
 {
 	std::cout << "[COption] " << text << std::endl;
 }
 
-void COption::error(const std::string & text)
+void COption::error (const std::string & text)
 {
 	print(text);
 	print("Error №" + std::to_string(errno));
