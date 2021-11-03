@@ -35,6 +35,11 @@ public:
 	virtual void setDir (DIRECTION dir) = 0;
 
 	/**
+	 * @brief Получить направление.
+	 */
+	virtual DIRECTION getDir() = 0;
+
+	/**
 	 * @brief Задать новые координаты головы.
 	 */
 	virtual void setNewHead (size_t x, size_t y) = 0;

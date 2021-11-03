@@ -72,6 +72,7 @@ void CController::keyboardThread ()
 			case 113: m_is_init = false; break;
 			case 112: m_pause = !m_pause; break;
 		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(50));
 	}
 }
 

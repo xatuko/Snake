@@ -40,6 +40,7 @@ public:
 	
 	std::pair<size_t,size_t> getHead () override;
 	const std::vector<Elem> & getSnake () override { return m_snake; }
+	DIRECTION getDir() override { return m_direction; }
 };
 
 #endif // CSNAKE_HPP
