@@ -1,15 +1,10 @@
 #include "cbox.hpp"
 
-CBox::CBox() : IBox()
+bool CBox::init ()
 {
-	m_side_size = 0;
-}
-
-bool CBox::init()
-{
-	if (m_side_size < 1)
+	if (m_side_size < 10)
 	{
-		print("Указан неверный размер поля.");
+		print("Указан слишком маленький размер поля.");
 		return false;
 	}
 
@@ -20,7 +15,7 @@ bool CBox::init()
 	return true;
 }
 
-bool CBox::draw()
+bool CBox::draw ()
 {
 	clearBuf();
 	if (m_food->hasFood())
@@ -73,30 +68,25 @@ bool CBox::draw()
 	return true;
 }
 
-void CBox::print(const std::string & text)
+void CBox::print (const std::string & text)
 {
 	std::cout << "[CBox] " << text << std::endl;
 }
 
-int CBox::error(const std::string & text)
+int CBox::error (const std::string & text)
 {
 	print(text);
 	print("Error № " + std::to_string(errno));
 	return -1;
 }
 
-void CBox::clearBuf()
+void CBox::clearBuf ()
 {
 	for (auto & str : m_box)
 		str = std::string(m_side_size, ' ');
 }
 
-std::pair<size_t, size_t> CBox::getBegPos()
+std::pair<size_t, size_t> CBox::getBegPos ()
 {
 	return std::make_pair(m_side_size / 2, m_side_size / 2);
-}
-
-CBox::~CBox()
-{
-	
 }

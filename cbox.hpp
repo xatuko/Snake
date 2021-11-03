@@ -6,7 +6,6 @@
 
 #include <vector>
 #include <string>
-#include <termios.h>
 #include <iostream>
 
 /**
@@ -16,31 +15,50 @@ class CBox : public IBox
 {
 private:
 // Members
-	size_t m_side_size;
-	bool m_is_init;
-	std::vector<std::string> m_box;
-	std::shared_ptr<ISnake> m_snake;
-	std::shared_ptr<IFood> m_food;
+	size_t m_side_size;					// Размер стороны поля.
+
+	std::vector<std::string> m_box;		// Поле.
+	std::shared_ptr<ISnake>  m_snake;	// Указатель на змея.
+	std::shared_ptr<IFood>   m_food;	// Указатель на еду.
 
 // Methods
-	void print(const std::string & text);
-	int  error(const std::string & text);
+	/**
+	 * @brief Вывести сообщение класса.
+	 */
+	void print (const std::string & text);
+
+	/**
+	 * @brief Вывести ошибку класса.
+	 * @param text Сообщение.
+	 * @return int = -1;
+	 */
+	int  error (const std::string & text);
+
+	/**
+	 * @brief Очистить поле.
+	 */
+	void clearBuf ();
 
 public:
-	CBox();
-	~CBox() override;
+	CBox () : IBox() { m_side_size = 0; };
+	~CBox () override { };
 
-	void setSideSize(const int & size) override { m_side_size = size; }
-	void addSnake(std::shared_ptr<ISnake> snake) override { m_snake = snake; }
-	void addFood(std::shared_ptr<IFood> food) override { m_food = food; }
-	void clearBuf() override;
+	bool init () override;
+	bool draw () override;
 
-	bool init() override;
-	bool draw() override;
-	bool isInit() override { return m_is_init; }
+	void addSnake (std::shared_ptr<ISnake> snake) override
+	{ m_snake = snake; }
+	
+	void addFood (std::shared_ptr<IFood> food) override
+	{ m_food = food; }
 
-	const size_t & getSideSize() override { return m_side_size; }
-	std::pair<size_t, size_t> getBegPos() override;
+	void setSideSize (const size_t & size) override
+	{ m_side_size = size; }
+
+	const size_t & getSideSize () override
+	{ return m_side_size; }
+	
+	std::pair<size_t, size_t> getBegPos () override;
 
 };
 
