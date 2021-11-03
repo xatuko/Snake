@@ -5,27 +5,28 @@
 
 #include <random>
 
+/**
+ * @brief Класс генерации еды.
+ */
 class CFood : public IFood
 {
 private:
-    // members
-    int m_x, m_y;
-    bool m_has_food;
-    std::vector<int> m_free_x, m_free_y;
-    
-    // methods
+	size_t m_x, m_y;						// Координаты еды.
+	bool  m_has_food;						// Флаг наличия еды.
+	std::vector<int> m_free_x, m_free_y;	// Массив свободных координат.
+	
 public:
-    CFood() : IFood() { m_has_food = false; }
-    ~CFood() override { }
+	CFood () : IFood() { m_has_food = false; }
+	~CFood () override { }
 
-    std::pair<int,int> getNewFood
-                       (const std::vector<std::string> & buf) override;
-    
-    bool hasFood() override { return m_has_food; }
-    void eatFood() override { m_has_food = false; }
-    std::pair<int,int> getFood() override;
+	std::pair<size_t,size_t> getNewFood
+		(const std::vector<std::string> & buf) override;
 
-
+	std::pair<size_t,size_t> getFood () override
+	{ return std::make_pair(m_x, m_y); }
+	
+	bool hasFood () override { return m_has_food; }
+	void eatFood () override { m_has_food = false; }
 };
 
 #endif // CFOOD_HPP

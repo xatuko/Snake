@@ -1,21 +1,18 @@
 #include "cfood.hpp"
 
-std::pair<int,int> CFood::getNewFood(const std::vector<std::string> & buf)
+std::pair<size_t,size_t> CFood::getNewFood
+	(const std::vector<std::string> & buf)
 {
 	m_free_x.clear();
 	m_free_y.clear();
 
 	for (int y = 0; y < buf.size(); y++)
-	{
 		for (int x = 0; x < buf[y].size(); x++)
-		{
 			if (buf[y][x] == ' ')
 			{
 				m_free_x.push_back(x);
 				m_free_y.push_back(y);
 			}
-		}
-	}
 
 	std::random_device rd;
 	std::default_random_engine dre(rd());
@@ -27,10 +24,5 @@ std::pair<int,int> CFood::getNewFood(const std::vector<std::string> & buf)
 
 	m_has_food = true;
 
-	return std::make_pair(m_x, m_y);
-}
-
-std::pair<int,int> CFood::getFood()
-{
 	return std::make_pair(m_x, m_y);
 }

@@ -1,20 +1,42 @@
 #ifndef IFOOD_HPP
 #define IFOOD_HPP
 
-#include <utility>
 #include <vector>
 #include <string>
 
+/**
+ * @brief Класс генерации еды.
+ */
 class IFood
 {
 public:
-	IFood() = default;
-	virtual ~IFood() = default;
-	virtual std::pair<int, int> getNewFood
-								(const std::vector<std::string> & buf) = 0;
-	virtual bool hasFood() = 0;
-	virtual void eatFood() = 0;
-	virtual std::pair<int,int> getFood() = 0;
+	IFood () = default;
+	virtual ~IFood () = default;
+
+	/**
+	 * @brief Получить координаты новой еды.
+	 * @param buf Поле с текущим положением змея.
+	 * @return std::pair<size_t,size_t> - Новые координаты 
+	 * (first = x, second = y).
+	 */
+	virtual std::pair<size_t,size_t> getNewFood
+		(const std::vector<std::string> & buf) = 0;
+
+	/**
+	 * @brief Есть ли еда на поле.
+	 */
+	virtual bool hasFood () = 0;
+
+	/**
+	 * @brief Съесть еду.
+	 */
+	virtual void eatFood () = 0;
+
+	/**
+	 * @brief Получить текущие координаты еды.
+	 * @return std::pair<size_t,size_t> - Координаты (first = x, second = y).
+	 */
+	virtual std::pair<size_t,size_t> getFood () = 0;
 };
 
 #endif // IFOOD_HPP
