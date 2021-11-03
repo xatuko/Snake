@@ -2,7 +2,6 @@
 #define CBOX_HPP
 
 #include "ibox.hpp"
-#include "cfood.hpp"
 
 #include <vector>
 #include <string>
