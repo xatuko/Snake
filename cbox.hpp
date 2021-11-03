@@ -15,23 +15,14 @@
 class CBox : public IBox
 {
 private:
-
-	// members
-	int m_side_size;
+// Members
+	size_t m_side_size;
 	bool m_is_init;
 	std::vector<std::string> m_box;
-	termios m_old_termios, m_current_termios;
 	std::shared_ptr<ISnake> m_snake;
-	std::unique_ptr<IFood> m_food;
-	std::atomic_bool m_dir_thread_run { false };
-	bool m_pause;
-	std::unique_ptr<std::thread> m_dir_thead;
+	std::shared_ptr<IFood> m_food;
 
-	// methods
-	void initTermios();
-	void resetTermios();
-	void directionThread();
-
+// Methods
 	void print(const std::string & text);
 	int  error(const std::string & text);
 
@@ -39,16 +30,18 @@ public:
 	CBox();
 	~CBox() override;
 
-	// methods
 	void setSideSize(const int & size) override { m_side_size = size; }
+	void addSnake(std::shared_ptr<ISnake> snake) override { m_snake = snake; }
+	void addFood(std::shared_ptr<IFood> food) override { m_food = food; }
+	void clearBuf() override;
+
 	bool init() override;
 	bool draw() override;
 	bool isInit() override { return m_is_init; }
-	void addSnake(std::shared_ptr<ISnake> snake) override { m_snake = snake; }
-	void clearBuf() override;
-	bool isPause() override { return m_pause; }
-	bool isRunning() override { return m_dir_thread_run; }
-	void finish() override { m_dir_thread_run = false;}
+
+	const size_t & getSideSize() override { return m_side_size; }
+	std::pair<size_t, size_t> getBegPos() override;
+
 };
 
 #endif // CBOX_HPP

@@ -3,28 +3,6 @@
 CBox::CBox() : IBox()
 {
 	m_side_size = 0;
-	m_is_init = false;
-	m_food = std::make_unique<CFood>();
-}
-
-void CBox::initTermios()
-{
-	// grab old terminal i/o settings
-	tcgetattr(0, &m_old_termios);
-	// make new settings same as old settings
-	m_current_termios = m_old_termios;
-	// disable buffered i/o
-	m_current_termios.c_lflag &= ~ICANON;
-	// set no echo mode
-	m_current_termios.c_lflag &= ~ECHO;
-
-	tcsetattr(0, TCSANOW, &m_current_termios);
-}
-
-void CBox::resetTermios()
-{
-	if (m_is_init)
-		tcsetattr(0, TCSANOW, &m_old_termios);
 }
 
 bool CBox::init()
@@ -38,13 +16,6 @@ bool CBox::init()
 	m_box.resize(m_side_size);
 	for (auto & val : m_box)
 		val.resize(m_side_size, ' ');
-
-	initTermios();
-
-	m_is_init = true;
-
-	m_dir_thread_run = true;
-	m_dir_thead = std::make_unique<std::thread>(&CBox::directionThread, this);
 
 	return true;
 }
@@ -90,7 +61,6 @@ bool CBox::draw()
 			return false;
 		}
 
-	
 	system("clear");
 	std::string border(m_side_size + 2, '-');
 	border[0] = '+';
@@ -121,29 +91,12 @@ void CBox::clearBuf()
 		str = std::string(m_side_size, ' ');
 }
 
-void CBox::directionThread()
+std::pair<size_t, size_t> CBox::getBegPos()
 {
-	int c;
-	while (m_dir_thread_run)
-	{
-		c = getc(stdin);
-		switch (c)
-		{
-			case 66: m_snake->setDir(DIRECTION::DOWN); break;
-			case 65: m_snake->setDir(DIRECTION::UP); break;
-			case 67: m_snake->setDir(DIRECTION::RIGHT); break;
-			case 68: m_snake->setDir(DIRECTION::LEFT); break;
-			case 113: m_dir_thread_run = false; break;
-			case 112: m_pause = !m_pause; break;
-		}
-	}
+	return std::make_pair(m_side_size / 2, m_side_size / 2);
 }
 
 CBox::~CBox()
 {
-	resetTermios();
 	
-	m_dir_thread_run = false;
-	if (m_dir_thead->joinable())
-		m_dir_thead->join();
 }

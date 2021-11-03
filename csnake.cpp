@@ -1,5 +1,17 @@
 #include "csnake.hpp"
 
+void CSnake::setSize(const size_t & size)
+{
+	m_snake.resize(size);
+}
+
+void CSnake::setBegPos(const size_t & x, const size_t & y)
+{
+	m_snake[0].next = nullptr;
+	m_snake[0].x = x;
+	m_snake[0].y = y;
+}
+
 bool CSnake::getStatus()
 {
 	if(m_status == true)
@@ -38,42 +50,19 @@ void printBuf(std::vector<std::string> &buf)
 
 CSnake::CSnake() : ISnake()
 {
-	m_direction = DIRECTION::DOWN;
-	m_snake.resize(3);
-	m_snake[0].next = nullptr;
-	m_snake[1].next = &m_snake[0];
-	m_snake[2].next = &m_snake[1];
 
-	m_snake[0].x = 5;
-	m_snake[0].y = 2;
-
-	m_snake[1].x = 5;
-	m_snake[1].y = 1;
-
-	m_snake[2].x = 5;
-	m_snake[2].y = 0;
-	m_status = false;
 }
 
-bool CSnake::init(const int & beg_size, const int & side_size)
+bool CSnake::init()
 {
-	if (beg_size > side_size / 2 || beg_size < 1 || side_size < 1)
-		return error("Ошибка инициализации змея.");
-
 	m_direction = DIRECTION::DOWN;
 
-	m_snake.resize(beg_size);
-
-	for (size_t i = m_snake.size() - 1; i > 0; i--)
+	for (size_t i = 1; i < m_snake.size(); i++)
 	{
 		m_snake[i].next = &m_snake[i-1];
-		m_snake[i].x = side_size / 2;
-		m_snake[i].y = side_size / 2 - i;
+		m_snake[i].x	= m_snake[i-1].x;
+		m_snake[i].y	= m_snake[i-1].y-1;
 	}
-
-	m_snake[0].next = nullptr;
-	m_snake[0].x = side_size / 2;
-	m_snake[0].y = side_size / 2;
 
 	return true;
 }
@@ -135,7 +124,7 @@ CSnake::~CSnake()
 
 void CSnake::print(const std::string & text)
 {
-
+	std::cout << "[CSnake] " << text << std::endl;
 }
 
 bool CSnake::error(const std::string & text)
