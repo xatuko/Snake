@@ -1,6 +1,6 @@
 #include "ccontroller.hpp"
 
-bool CController::init(const int & side_size, const int & snake_size)
+bool CController::init (const int & side_size, const int & snake_size)
 {
 	// Инициализация поля.
 	m_box = std::make_shared<CBox>();
@@ -35,7 +35,7 @@ bool CController::init(const int & side_size, const int & snake_size)
 	return true;
 }
 
-void CController::drawThread()
+void CController::drawThread ()
 {
 	if (!m_box->draw())
 	{
@@ -57,7 +57,7 @@ void CController::drawThread()
 	}
 }
 
-void CController::keyboardThread()
+void CController::keyboardThread ()
 {
 	int c;
 	while (m_keyboard_thread_run)
@@ -75,7 +75,7 @@ void CController::keyboardThread()
 	}
 }
 
-void CController::start()
+void CController::start ()
 {
 	m_draw_thread_run	  = true;
 	m_keyboard_thread_run = true;
@@ -86,18 +86,18 @@ void CController::start()
 						(&CController::keyboardThread, this);
 }
 
-void CController::stop()
+void CController::stop ()
 {
 	m_draw_thread_run	  = false;
 	m_keyboard_thread_run = false;
 }
 
-void CController::print(const std::string & text)
+void CController::print (const std::string & text)
 {
 	std::cout << "[CController] " << text << std::endl;
 }
 
-void CController::error(const std::string & text)
+void CController::error (const std::string & text)
 {
 	print(text);
 	print("Error № " + std::to_string(errno));
@@ -122,7 +122,7 @@ void CController::resetTermios ()
 	tcsetattr(0, TCSANOW, &m_old_termios);
 }
 
-CController::~CController()
+CController::~CController ()
 {
 	m_draw_thread_run	  = false;
 	m_keyboard_thread_run = false;
