@@ -1,38 +1,5 @@
 #include "ccontroller.hpp"
 
-CController::~CController()
-{
-	m_draw_thread_run	  = false;
-	m_keyboard_thread_run = false;
-
-	if (m_keyboard_thread->joinable())
-		m_keyboard_thread->join();
-	
-	if (m_draw_thread->joinable())
-		m_draw_thread->join();
-
-	resetTermios();
-}
-
-void CController::initTermios()
-{
-	// grab old terminal i/o settings
-	tcgetattr(0, &m_old_termios);
-	// make new settings same as old settings
-	m_current_termios = m_old_termios;
-	// disable buffered i/o
-	m_current_termios.c_lflag &= ~ICANON;
-	// set no echo mode
-	m_current_termios.c_lflag &= ~ECHO;
-
-	tcsetattr(0, TCSANOW, &m_current_termios);
-}
-
-void CController::resetTermios()
-{
-	tcsetattr(0, TCSANOW, &m_old_termios);
-}
-
 bool CController::init(const int & side_size, const int & snake_size)
 {
 	// Инициализация поля.
@@ -55,7 +22,6 @@ bool CController::init(const int & side_size, const int & snake_size)
 	if (!m_snake->init())
 		return false;
 
-
 	// Инициализация еды.
 	m_food = std::make_shared<CFood>();
 
@@ -71,15 +37,21 @@ bool CController::init(const int & side_size, const int & snake_size)
 
 void CController::drawThread()
 {
+	if (!m_box->draw())
+	{
+		m_is_init = false;
+		return;
+	}
+
 	while (m_draw_thread_run)
 	{
+		m_snake->step();
+
 		if (!m_box->draw())
 		{
 			m_is_init = false;
 			break;
 		}
-
-		m_snake->step();
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(250));
 	}
@@ -129,4 +101,37 @@ void CController::error(const std::string & text)
 {
 	print(text);
 	print("Error № " + std::to_string(errno));
+}
+
+void CController::initTermios ()
+{
+	// grab old terminal i/o settings
+	tcgetattr(0, &m_old_termios);
+	// make new settings same as old settings
+	m_current_termios = m_old_termios;
+	// disable buffered i/o
+	m_current_termios.c_lflag &= ~ICANON;
+	// set no echo mode
+	m_current_termios.c_lflag &= ~ECHO;
+
+	tcsetattr(0, TCSANOW, &m_current_termios);
+}
+
+void CController::resetTermios ()
+{
+	tcsetattr(0, TCSANOW, &m_old_termios);
+}
+
+CController::~CController()
+{
+	m_draw_thread_run	  = false;
+	m_keyboard_thread_run = false;
+
+	if (m_keyboard_thread->joinable())
+		m_keyboard_thread->join();
+	
+	if (m_draw_thread->joinable())
+		m_draw_thread->join();
+
+	resetTermios();
 }

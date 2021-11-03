@@ -8,45 +8,75 @@
 
 #include <memory>
 #include <termios.h>
+#include <atomic>
+#include <thread>
 
 class CController : public IController
 {
 private:
 // Members
-	std::shared_ptr<ISnake> m_snake;
-	std::shared_ptr<IFood>  m_food;
-	std::shared_ptr<IBox>   m_box;
+	std::shared_ptr<ISnake> m_snake;	// Змей.
+	std::shared_ptr<IFood>  m_food;		// Еда.
+	std::shared_ptr<IBox>   m_box;		// Поле.
+	
+	// Флаг процесса ввода.
+	std::atomic_bool m_keyboard_thread_run	{ false };
+	// Флаг процесса отрисовки.
+	std::atomic_bool m_draw_thread_run		{ false };
+	// Флаг инициализации.
+	std::atomic_bool m_is_init				{ false };
+	// Флаг паузы
+	std::atomic_bool m_pause				{ false };
 
-	std::atomic_bool m_keyboard_thread_run	{ false },
-					 m_draw_thread_run		{ false },
-					 m_is_init				{ false },
-					 m_pause				{ false };
+	termios m_old_termios;		// Начальные параметры консоли.
+	termios m_current_termios;	// Параметры консоли для игры.
 
-	termios m_old_termios,
-			m_current_termios;
-
-	std::unique_ptr<std::thread> m_draw_thread,
-								 m_keyboard_thread;
+	// Поток отрисовки.
+	std::unique_ptr<std::thread> m_draw_thread;
+	// Поток чтения ввода.
+	std::unique_ptr<std::thread> m_keyboard_thread;
 
 // Methods
-	void keyboardThread();
-	void drawThread();
+	/**
+	 * @brief Потоковый метод чтения ввода.
+	 */
+	void keyboardThread ();
+	
+	/**
+	 * @brief Потоковый метод отрисовки.
+	 */
+	void drawThread ();
 
-	void initTermios();
-	void resetTermios();
+	/**
+	 * @brief Установить параметры консоли для игры.
+	 */
+	void initTermios ();
 
-	void print(const std::string & text);
-	void error(const std::string & text);
+	/**
+	 * @brief Вернуть исходные параметры консоли.
+	 */
+	void resetTermios ();
+
+	/**
+	 * @brief Вывод сообщения класса.
+	 */
+	void print (const std::string & text);
+
+	/**
+	 * @brief Вывод ошибки класса.
+	 */
+	void error (const std::string & text);
 
 public:
 // Methods
-	CController() : IController() { }
-	~CController() override;
+	CController () : IController() { }
+	~CController () override;
 
-	bool init(const int & side_size, const int & snake_size) override;
-	void start() override;
-	void stop() override;
-	bool isInit() override { return m_is_init; }
+	bool init (const int & side_size, const int & snake_size) override;
+	bool isInit () override { return m_is_init; }
+	
+	void start () override;
+	void stop  () override;
 };
 
 #endif // CCONTROLLER_HPP
