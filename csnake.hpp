@@ -3,44 +3,43 @@
 
 #include "isnake.hpp"
 
-#include <vector>
 #include <string>
-#include <unistd.h>
 #include <iostream>
-#include <thread>
-#include <stdio.h>
-#include <termios.h>
-#include <atomic>
-
-
-void printBuf(std::vector<std::string> &buf);
 
 class CSnake : public ISnake
 {
 private:
 // Members
-	DIRECTION m_direction;
-	std::vector<Elem> m_snake;
-	int m_length;
-	std::atomic_bool m_status;
+	DIRECTION m_direction;		// Направление движения.
+	std::vector<Elem> m_snake;	// Змей.
+
 // Methods
-	std::pair<int,int> getHead() override;
-	void setNewHead(int x, int y) override;
-	void print(const std::string & text);
-	bool error(const std::string & text);
+	/**
+	 * @brief Печать сообщения класса.
+	 */
+	void print (const std::string & text);
+
+	/**
+	 * @brief Печать ошибки из класса.
+	 * @return Всегда false.
+	 */
+	bool error (const std::string & text);
 
 public:
-	CSnake();
-	~CSnake() override;
-	void setSize(const size_t & size) override;
-	void setBegPos(const size_t & x, const size_t & y) override;
-	bool init() override;
+	CSnake() : ISnake() { }
+	~CSnake() override { }
 
-	void step() override;
-	void draw(int x_size, int y_size, std::vector<std::string>&);
-	void setDir(DIRECTION dir) override;
-	bool getStatus() override;
-	std::vector<Elem> getSnake() override { return m_snake; }
+	bool init () override;
+
+	void setDir (DIRECTION dir) override;
+	void setSize (const size_t & size) override;
+	void setBegPos (const size_t & x, const size_t & y) override;
+	void setNewHead (size_t x, size_t y) override;
+
+	void step () override;
+	
+	std::pair<size_t,size_t> getHead () override;
+	const std::vector<Elem> & getSnake () override { return m_snake; }
 };
 
 #endif // CSNAKE_HPP

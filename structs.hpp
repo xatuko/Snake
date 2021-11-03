@@ -13,8 +13,8 @@ enum class DIRECTION
 
 struct Elem
 {
-	int x;
-	int y;
+	size_t x;
+	size_t y;
 	Elem *next;
 };
 
